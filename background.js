@@ -1,22 +1,22 @@
 chrome.runtime.onStartup.addListener(function (){
-	var enabled = false;
-	chrome.storage.sync.set({'enabled': enabled}, function() {
+	var isEnabled = false;
+	chrome.storage.sync.set({'isEnabled': isEnabled}, function() {
 		console.log('Extension is disabled.');
 	});
 });
 
 function updateIcon(){
-	chrome.storage.sync.get('enabled', function(data){
-		var enabled = data.enabled;
+	chrome.storage.sync.get('jsEnabled', function(data){
+		var isEnabled = data.isEnabled;
 		var icon;
-		if(enabled){
+		if(isEnabled){
 			icon = 'on.png';
 		}else{
 			icon = 'off.png';
 		}
-		enabled = !enabled;
+		enabled = !isEnabled;
 		chrome.browserAction.setIcon({path: icon});
-		chrome.storage.sync.set({'enabled': enabled}, function() {
+		chrome.storage.sync.set({'isEnabled': isEnabled}, function() {
 			console.log('Extension has been disabled/enabled.');
 		});	
 	});
