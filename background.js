@@ -6,7 +6,7 @@ chrome.runtime.onStartup.addListener(function (){
 });
 
 function updateIcon(){
-	chrome.storage.sync.get('jsEnabled', function(data){
+	chrome.storage.sync.get('isEnabled', function(data){
 		var isEnabled = data.isEnabled;
 		var icon;
 		if(isEnabled){
@@ -14,7 +14,7 @@ function updateIcon(){
 		}else{
 			icon = 'off.png';
 		}
-		enabled = !isEnabled;
+		isEnabled = !isEnabled;
 		chrome.browserAction.setIcon({path: icon});
 		chrome.storage.sync.set({'isEnabled': isEnabled}, function() {
 			console.log('Extension has been disabled/enabled.');
