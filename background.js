@@ -30,13 +30,13 @@ chrome.tabs.onUpdated.addListener(function(tabId , info , tab) {
 		if(tab.url.includes("://www.facebook")){
 			chrome.tabs.discard(tabId);
 			
-			/*
+			/* Alternative way of dealing with tab no. 1
 			chrome.tabs.executeScript(tabId, {
 				code: 'document.body.innerHTML = "No facebook for you!"'
 			});
 			*/
 			
-			/*
+			/* Alternative way no. 2
 			chrome.tabs.remove(tabId);
 			*/
 		}
