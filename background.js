@@ -25,7 +25,7 @@ function updateIcon(){
 chrome.browserAction.onClicked.addListener(updateIcon);
 
 
-chrome.tabs.onUpdated.addListener(function(tabId , info , tab) {
+chrome.tabs.onUpdated.addListener(function closeFacebook(tabId , info , tab) {
 		console.log(tab.url);
 		if(tab.url.includes("://www.facebook")){
 			chrome.tabs.discard(tabId);
