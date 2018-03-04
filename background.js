@@ -29,7 +29,7 @@ function updateIcon(){
 
 chrome.browserAction.onClicked.addListener(updateIcon);
 
-chrome.tabs.onUpdated.addListener(function closeFacebook(tabId , info , tab) {
+chrome.tabs.onUpdated.addListener(function blockSites(tabId , info , tab) {
 	console.log(tab.url);
 	chrome.storage.sync.get('blockedSites', function (data){
 		data.blockedSites.forEach(function(site){
