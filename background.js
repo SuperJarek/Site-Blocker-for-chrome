@@ -28,7 +28,6 @@ chrome.browserAction.onClicked.addListener(function updateIcon(){
 });
 
 chrome.tabs.onUpdated.addListener(function closeFacebook(tabId , info , tab) {
-<<<<<<< HEAD
 	chrome.storage.sync.get('isEnabled', function(data){
 		if(data.isEnabled){
 			console.log(tab.url);
@@ -48,6 +47,7 @@ chrome.tabs.onUpdated.addListener(function closeFacebook(tabId , info , tab) {
 					*/
 
 					}
+
 				});
 			});
 
