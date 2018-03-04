@@ -23,3 +23,24 @@ function updateIcon(){
 };
 
 chrome.browserAction.onClicked.addListener(updateIcon);
+
+
+chrome.tabs.onUpdated.addListener(function(tabId , info , tab) {
+		console.log(tab.url);
+		if(tab.url.includes("://www.facebook")){
+			chrome.tabs.discard(tabId);
+			
+			/*
+			chrome.tabs.executeScript(tabId, {
+				code: 'document.body.innerHTML = "No facebook for you!"'
+			});
+			*/
+			
+			/*
+			chrome.tabs.remove(tabId);
+			*/
+		}
+});
+
+
+
