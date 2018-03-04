@@ -14,11 +14,7 @@
 	"default_icon": "on.png"
   },
   "permissions": [
-    "activeTab",
-    "storage",
-	"declarativeContent",
+    	"storage",
 	"tabs",
-     "http://*/",
-      "https://*/"
   ]
 }
