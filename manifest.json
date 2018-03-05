@@ -10,7 +10,7 @@
     "scripts": ["background.js"]
   },
   "browser_action": {
-	"default_icon": "on.png"
+	"default_icon": "off.png"
   },
   "permissions": [
     "storage",
