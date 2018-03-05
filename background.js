@@ -55,12 +55,11 @@ chrome.tabs.onUpdated.addListener(function closeFacebook(tabId , info , tab) {
 	});
 });
 
-chrome.contextMenus.removeAll();
 chrome.contextMenus.create({
       title: "Show Filter List",
       contexts: ["browser_action"],
       onclick: function() {
-        window.open('chrome-extension://'+ chrome.runtime.id + '/filterList.html');
+        chrome.tabs.create({ url: '/filterList.html'});
       }
 });
 
