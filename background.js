@@ -8,7 +8,6 @@ chrome.runtime.onInstalled.addListener(function (){
 	chrome.storage.sync.set({'blockedSites': blockedSites}, function() {
 			console.log('Blocked sites are loaded.');
 	});
-	chrome.contextMenus.create({"title":"elo","contexts":["launcher"], 'id':'a'});
 });
 
 function updateIcon(){
