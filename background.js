@@ -35,7 +35,7 @@ chrome.tabs.onUpdated.addListener(function closeFacebook(tabId , info , tab) {
 					data.blockedSites.forEach(function(site){
 					if(tab.url.includes(site)){
 						chrome.tabs.discard(tabId);
-				
+
 					/* Alternative way of dealing with tab no. 1
 						chrome.tabs.executeScript(tabId, {
 							code: 'document.body.innerHTML = "No facebook for you!"'
@@ -46,7 +46,9 @@ chrome.tabs.onUpdated.addListener(function closeFacebook(tabId , info , tab) {
 						chrome.tabs.remove(tabId);
 					*/
 
+
 					}
+
 
 				});
 			});
