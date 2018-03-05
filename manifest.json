@@ -14,8 +14,7 @@
 	"default_icon": "on.png"
   },
   "permissions": [
-    "storage",
+  "storage",
 	"tabs",
-	"contextMenus"
   ]
 }
