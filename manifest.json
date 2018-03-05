@@ -14,7 +14,7 @@
 	"default_icon": "on.png"
   },
   "permissions": [
-  "storage",
-	"tabs",
+    "storage",
+	"tabs"
   ]
 }
