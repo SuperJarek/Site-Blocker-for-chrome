@@ -1,7 +1,12 @@
-chrome.runtime.onStartup.addListener(function (){
+chrome.runtime.onInstalled.addListener(function (){
 	var isEnabled = false;
 	chrome.storage.sync.set({'isEnabled': isEnabled}, function() {
 		console.log('Extension is disabled.');
+	});
+	var blockedSites = ["://www.facebook","://twitter",
+		"://www.youtube","://www.instagram"];
+	chrome.storage.sync.set({'blockedSites': blockedSites}, function() {
+			console.log('Blocked sites are loaded.');
 	});
 });
 
@@ -24,22 +29,25 @@ function updateIcon(){
 
 chrome.browserAction.onClicked.addListener(updateIcon);
 
-
-chrome.tabs.onUpdated.addListener(function(tabId , info , tab) {
-		console.log(tab.url);
-		if(tab.url.includes("://www.facebook")){
-			chrome.tabs.discard(tabId);
+chrome.tabs.onUpdated.addListener(function blockSites(tabId , info , tab) {
+	console.log(tab.url);
+	chrome.storage.sync.get('blockedSites', function (data){
+		data.blockedSites.forEach(function(site){
+			if(tab.url.includes(site)){
+				chrome.tabs.discard(tabId);
 			
-			/*
-			chrome.tabs.executeScript(tabId, {
-				code: 'document.body.innerHTML = "No facebook for you!"'
-			});
-			*/
-			
-			/*
-			chrome.tabs.remove(tabId);
-			*/
-		}
+				/* Alternative way of dealing with tab no. 1
+				chrome.tabs.executeScript(tabId, {
+					code: 'document.body.innerHTML = "No facebook for you!"'
+				});
+				*/
+				
+				/* Alternative way no. 2
+				chrome.tabs.remove(tabId);
+				*/
+			}
+		});
+	});
 });
 
 
