@@ -1,11 +1,11 @@
-chrome.runtime.onStartup.addListener(function (){
+chrome.runtime.onStartup.addListener(function initialization(){
 	var isEnabled = false;
 	chrome.storage.sync.set({'isEnabled': isEnabled}, function() {
 		console.log('Extension is disabled.');
 	});
 });
 
-function updateIcon(){
+chrome.browserAction.onClicked.addListener(function updateIcon(){
 	chrome.storage.sync.get('isEnabled', function(data){
 		var isEnabled = data.isEnabled;
 		var icon;
@@ -20,9 +20,7 @@ function updateIcon(){
 			console.log('Extension has been disabled/enabled.');
 		});	
 	});
-};
-
-chrome.browserAction.onClicked.addListener(updateIcon);
+});
 
 
 chrome.tabs.onUpdated.addListener(function closeFacebook(tabId , info , tab) {
