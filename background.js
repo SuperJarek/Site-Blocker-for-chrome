@@ -1,13 +1,14 @@
-chrome.runtime.onStartup.addListener(function (){
+chrome.runtime.onInstalled.addListener(function (){
 	var isEnabled = false;
 	chrome.storage.sync.set({'isEnabled': isEnabled}, function() {
 		console.log('Extension is disabled.');
 	});
-	var blockedSites = ["://www.facebook","://www.twitter",
-		"://www.youtube","://www.innstagram"];
+	var blockedSites = ["://www.facebook","://twitter",
+		"://www.youtube","://www.instagram"];
 	chrome.storage.sync.set({'blockedSites': blockedSites}, function() {
 			console.log('Blocked sites are loaded.');
 	});
+	chrome.contextMenus.create({"title":"elo","contexts":["launcher"], 'id':'a'});
 });
 
 function updateIcon(){
