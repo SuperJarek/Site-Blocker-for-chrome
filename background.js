@@ -75,7 +75,7 @@ chrome.contextMenus.onClicked.addListener(function contextMenuHandler(info, tab)
 						let urls = tabs.map(x => x.url);
 						data.blockedSites.push(urls);
 						chrome.storage.sync.set({'blockedSites':data.blockedSites}, function(data){
-							console.log(urls + 'added to blocked sites');
+							console.log(urls + ' added to blocked sites');
 						});
 					});	
 				});
