@@ -2,6 +2,9 @@
 An open source, site blocking/filtering extension to Google Chrome.
 
 
+
+
+
 # How to install?
 - Download the full directory
 - go to chrome://extensions/ in your browser
