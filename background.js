@@ -70,10 +70,11 @@ chrome.contextMenus.onClicked.addListener(function contextMenuHandler(info, tab)
 				chrome.tabs.create({ url: '/filterList.html'});
 				break;
 			case "AddSiteToFilterList":
-				chrome.tabs.query({active:true, currentWindow: true}, function(tabs) {
+				chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 					chrome.storage.sync.get('blockedSites', function (data){
 						if(tabs.length>1){
-							throw new Error('passed more than one page to be blocked', 'background.js', '76');
+							alert('Something gone wrong. Sorry.');
+							throw new Error('passed more than one page to be blocked', 'background.js', '76')
 						}
 						let urls = tabs.map(x => x.url);
 						data.blockedSites.push(urls);
