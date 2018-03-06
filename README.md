@@ -1,5 +1,5 @@
 # SiteBlocker extension for Google Chrome
-An open source, site blocking/filtering extension for Google Chrome.
+An open source, site blocking/filtering extension for Google Chrome. Version 0.1.0.
 
 ## How to install?
 - Download the full directory
@@ -14,4 +14,4 @@ An open source, site blocking/filtering extension for Google Chrome.
 - In the options tab, it is possible to choose the extensions behaviour when it encounters blocked site (closing the tab or clearing it).
 
 ## Feedback
-For all the feedback feel free to email baniecki.jan(at)gmail.com or  
+For all the feedback feel free to email baniecki.jan(at)gmail.com or jaroslaw.szymukowicz(at)gmail.com
