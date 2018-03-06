@@ -73,7 +73,7 @@ chrome.contextMenus.onClicked.addListener(function contextMenuHandler(info, tab)
 				chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 					chrome.storage.sync.get('blockedSites', function (data){
 						if(tabs.length>1){
-							alert('Something gone wrong. Sorry.');
+							alert('Something went wrong. Sorry.');
 							throw new Error('passed more than one page to be blocked', 'background.js', '76')
 						}
 						let urls = tabs.map(x => x.url);
