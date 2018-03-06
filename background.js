@@ -58,13 +58,31 @@ chrome.contextMenus.create({
       contexts: ["browser_action"]
 });
 
+chrome.contextMenus.create({
+	  id: "AddSiteToFilterList",
+      title: "Block this page",
+      contexts: ["browser_action"]
+});
+
 chrome.contextMenus.onClicked.addListener(function contextMenuHandler(info, tab) {
 		switch(info.menuItemId) {
 			case "FilterListMenu":
 				chrome.tabs.create({ url: '/filterList.html'});
 				break;
+			case "AddSiteToFilterList":
+				chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+					chrome.storage.sync.get('blockedSites', function (data){
+						let urls = tabs.map(x => x.url);
+						data.blockedSites.push(urls);
+						chrome.storage.sync.set({'blockedSites':data.blockedSites}, function(data){
+							console.log(urls + 'added to blocked sites');
+						});
+					});	
+				});
+				break;
 		}
 });
+
 
 
 
