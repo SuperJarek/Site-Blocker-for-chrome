@@ -8,7 +8,7 @@ chrome.runtime.onInstalled.addListener(function initialization(){
 	chrome.storage.sync.set({'blockedSites': blockedSites}, function() {
 			console.log('Blocked sites are loaded.');
 	});
-	chrome.storage.sync.set({'blocking_method': "close_tab"}, function() {
+	chrome.storage.sync.set({'blockingMethod': "close_tab"}, function() {
 		console.log('closing tab set.');
 	});
 });
@@ -37,8 +37,8 @@ chrome.tabs.onUpdated.addListener(function closeFacebook(tabId , info , tab) {
 			chrome.storage.sync.get('blockedSites', function (data){
 					data.blockedSites.forEach(function(site){
 					if(tab.url.includes(site)){
-						chrome.storage.sync.get('blocking_method', function (data){
-							switch(data.blocking_method){
+						chrome.storage.sync.get('blockingMethod', function (data){
+							switch(data.blockingMethod){
 								case "close_tab":
 									chrome.tabs.remove(tabId);
 									break;
