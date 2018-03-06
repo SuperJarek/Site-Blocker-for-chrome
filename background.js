@@ -58,12 +58,15 @@ chrome.tabs.onUpdated.addListener(function closeFacebook(tabId , info , tab) {
 });
 
 chrome.contextMenus.create({
+	  id: "FilterListMenu",
       title: "Show Filter List",
-      contexts: ["browser_action"],
-      onclick: function() {
-        chrome.tabs.create({ url: '/filterList.html'});
-      }
+      contexts: ["browser_action"]
 });
+
+chrome.contextMenus.onClicked.addListener(function() {
+        chrome.tabs.create({ url: '/filterList.html'});
+});
+
 
 
 
