@@ -1,4 +1,4 @@
-# SiteBlocker extension for Chrome
+# SiteBlocker extension for Google Chrome
 An open source, site blocking/filtering extension for Google Chrome.
 
 ## How to install?
