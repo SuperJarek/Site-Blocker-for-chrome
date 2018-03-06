@@ -8,6 +8,9 @@ chrome.runtime.onInstalled.addListener(function initialization(){
 	chrome.storage.sync.set({'blockedSites': blockedSites}, function() {
 			console.log('Blocked sites are loaded.');
 	});
+	chrome.storage.sync.set({'blocking_method': "close_tab"}, function() {
+		console.log('closing tab set.');
+	});
 });
 
 chrome.browserAction.onClicked.addListener(function updateIcon(){
@@ -34,17 +37,20 @@ chrome.tabs.onUpdated.addListener(function closeFacebook(tabId , info , tab) {
 			chrome.storage.sync.get('blockedSites', function (data){
 					data.blockedSites.forEach(function(site){
 					if(tab.url.includes(site)){
-						chrome.tabs.discard(tabId);
-
-					/* Alternative way of dealing with tab no. 1
+						chrome.storage.sync.get('blocking_method', function (data){
+							switch(data.blocking_method){
+								case "close_tab":
+									chrome.tabs.remove(tabId);
+									break;
+								case "clear_tab":
+									chrome.tabs.discard(tabId);
+									break;
+							}
+						});
+					/* Alternative way of dealing with tab
 						chrome.tabs.executeScript(tabId, {
 							code: 'document.body.innerHTML = "No facebook for you!"'
-						});
-					*/
-				
-					/* Alternative way no. 2
-						chrome.tabs.remove(tabId);
-					*/
+						}); */
 					}
 				});
 			});
