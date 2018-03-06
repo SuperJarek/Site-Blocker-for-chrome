@@ -45,25 +45,27 @@ chrome.tabs.onUpdated.addListener(function closeFacebook(tabId , info , tab) {
 					/* Alternative way no. 2
 						chrome.tabs.remove(tabId);
 					*/
-
-
 					}
-
-
 				});
 			});
-
 		}
 	});
 });
 
 chrome.contextMenus.create({
+	  id: "FilterListMenu",
       title: "Show Filter List",
-      contexts: ["browser_action"],
-      onclick: function() {
-        chrome.tabs.create({ url: '/filterList.html'});
-      }
+      contexts: ["browser_action"]
 });
+
+chrome.contextMenus.onClicked.addListener(function contextMenuHandler(info, tab) {
+		switch(info.menuItemId) {
+			case "FilterListMenu":
+				chrome.tabs.create({ url: '/filterList.html'});
+				break;
+		}
+});
+
 
 
 
