@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		};		
 	});
 });
+
 function button(){
 	let buttons = document.getElementsByTagName("button");
 		console.log("button number: " + buttons.length);
