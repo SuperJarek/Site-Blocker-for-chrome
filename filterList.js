@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function renderFilterListTable() {
 	setAddButtonListener();
 });
 
-function setCloseButtonsListeners(){
+function setDeleteButtonsListeners(){
 	let buttons = document.getElementsByTagName("button");
 		console.log("button number: " + buttons.length);
 	for (i = 0; i < buttons.length; i++) {
