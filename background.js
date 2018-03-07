@@ -8,9 +8,9 @@ chrome.runtime.onInstalled.addListener(function initialization(){
 	chrome.storage.sync.set({'blockedSites': blockedSites}, function() {
 			console.log('Blocked sites are loaded.');
 	});
-	chrome.storage.sync.set({'blockingMethod': "close_tab"}, function() {
-		console.log('closing tab set.');
-	});
+	chrome.storage.sync.set({'blockingMethod': "close_tab"}, function() {});
+	let timerData = { isTimerEnabled: false, blockUntilMilliseconds: 0};
+	chrome.storage.sync.set({'timerData': timerData}, function() {});
 });
 
 chrome.browserAction.onClicked.addListener(function toggleBlocking(){
@@ -33,15 +33,20 @@ chrome.browserAction.onClicked.addListener(function toggleBlocking(){
 chrome.tabs.onUpdated.addListener(function blockIfEnabled(tabId, info, tab) {
 	chrome.storage.sync.get('isEnabled', function (data) {
 		if (data.isEnabled) {
-			chrome.storage.sync.get('blockUntilMilliseconds', function (data) {
-				let timeLeft = data.blockUntilMilliseconds - Date.now();
-				if (timeLeft <= 0){
-					chrome.storage.sync.set({'isEnabled': false}, function() {
-						chrome.browserAction.setIcon({path: 'of.png'});
-						console.log('Set to false, time is up.');
-					});
-					chrome.tabs.reload(tabId);
-					return;
+			chrome.storage.sync.get('timerData', function (data) {
+				if(data.timerData.isTimerEnabled){
+					let timeLeft = data.timerData.blockUntilMilliseconds - Date.now();
+					if (timeLeft <= 0){  //unblock
+						data.timerData.isTimerEnabled = false;
+						chrome.storage.sync.set({'timerData': data.timerData}, function() {
+							chrome.storage.sync.set({'isEnabled': false}, function() {
+								chrome.browserAction.setIcon({path: 'off.png'});
+								console.log('Set to false, time is up.');
+								chrome.tabs.reload(tabId);
+							});
+						});
+						return;
+					}
 				}
 				chrome.storage.sync.get('blockedSites', function (data) {
 					data.blockedSites.forEach(function (site) {
