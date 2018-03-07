@@ -13,7 +13,7 @@ chrome.runtime.onInstalled.addListener(function initialization(){
 	});
 });
 
-chrome.browserAction.onClicked.addListener(function updateIcon(){
+chrome.browserAction.onClicked.addListener(function toggleBlocking(){
 	chrome.storage.sync.get('isEnabled', function(data){
 		var isEnabled = data.isEnabled;
 		isEnabled = !isEnabled;
@@ -30,28 +30,38 @@ chrome.browserAction.onClicked.addListener(function updateIcon(){
 	});
 });
 
-chrome.tabs.onUpdated.addListener(function closeFacebook(tabId , info , tab) {
-	chrome.storage.sync.get('isEnabled', function(data){
-		if(data.isEnabled){
-			console.log(tab.url);
-			chrome.storage.sync.get('blockedSites', function (data){
-					data.blockedSites.forEach(function(site){
-					if(tab.url.includes(site)){
-						chrome.storage.sync.get('blockingMethod', function (data){
-							switch(data.blockingMethod){
+chrome.tabs.onUpdated.addListener(function blockIfEnabled(tabId, info, tab) {
+	chrome.storage.sync.get('isEnabled', function (data) {
+		if (data.isEnabled) {
+			chrome.storage.sync.get('blockUntilMilliseconds', function (data) {
+				let timeLeft = data.blockUntilMilliseconds - Date.now();
+				if (timeLeft <= 0){
+					chrome.storage.sync.set({'isEnabled': false}, function() {
+						chrome.browserAction.setIcon({path: 'of.png'});
+						console.log('Set to false, time is up.');
+					});
+					chrome.tabs.reload(tabId);
+					return;
+				}
+				chrome.storage.sync.get('blockedSites', function (data) {
+					data.blockedSites.forEach(function (site) {
+						if (tab.url.includes(site)) {
+							chrome.storage.sync.get('blockingMethod', function (data) {
+								switch (data.blockingMethod) {
 								case "close_tab":
 									chrome.tabs.remove(tabId);
 									break;
 								case "clear_tab":
 									chrome.tabs.discard(tabId);
 									break;
-							}
-						});
-					/* Alternative way of dealing with tab
-						chrome.tabs.executeScript(tabId, {
+								}
+							});
+							/* Alternative way of dealing with tab
+							chrome.tabs.executeScript(tabId, {
 							code: 'document.body.innerHTML = "No facebook for you!"'
-						}); */
-					}
+							}); */
+						}
+					});
 				});
 			});
 		}
@@ -70,17 +80,26 @@ chrome.contextMenus.create({
       contexts: ["browser_action"]
 });
 
+chrome.contextMenus.create({
+	  id: "BlockedModeTimer",
+      title: "Blocked mode setup",
+      contexts: ["browser_action"]
+});
+
 chrome.contextMenus.onClicked.addListener(function contextMenuHandler(info, tab) {
 		switch(info.menuItemId) {
 			case "FilterListMenu":
 				chrome.tabs.create({ url: '/filterList.html'});
+				break;
+			case "BlockedModeTimer":
+				chrome.tabs.create({ url: '/blockedModeSetup.html'});
 				break;
 			case "AddSiteToFilterList":
 				chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 					chrome.storage.sync.get('blockedSites', function (data){
 						if(tabs.length>1){
 							alert('Something went wrong. Sorry.');
-							throw new Error('More than one active page in current widnow')
+							throw new Error('passed more than one page to be blocked')
 						}
 						let urls = tabs.map(x => x.url);
 						data.blockedSites.push(urls);
