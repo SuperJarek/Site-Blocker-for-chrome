@@ -1,24 +1,25 @@
 document.addEventListener('DOMContentLoaded', function() {
-	drawFilterListTable(function(){
-		let buttons = document.getElementsByTagName("button");
-			console.log("button number: " + buttons.length);
-		for (i = 0; i < buttons.length; i++) {
-			buttons[i].addEventListener("click", function() {
-				let url = document.getElementById(this.id[0] + "site").innerHTML;
-				let id = this.id[0];
-				chrome.storage.sync.get('blockedSites', function (data){
-					let blockedSites = data.blockedSites;
-					blockedSites.splice(id,1);
-					console.log("selected button index: " + id);
-					chrome.storage.sync.set({'blockedSites': blockedSites}, function (){
-						console.log(url + " has been removed from filter list");
-						drawFilterListTable();
-					});
+	drawFilterListTable(button);
+});
+function button(){
+	let buttons = document.getElementsByTagName("button");
+		console.log("button number: " + buttons.length);
+	for (i = 0; i < buttons.length; i++) {
+		buttons[i].addEventListener("click", function() {
+			let url = document.getElementById(this.id[0] + "site").innerHTML;
+			let id = this.id[0];
+			chrome.storage.sync.get('blockedSites', function (data){
+				let blockedSites = data.blockedSites;
+				blockedSites.splice(id,1);
+				console.log("selected button index: " + id);
+				chrome.storage.sync.set({'blockedSites': blockedSites}, function (){
+					console.log(url + "has been removed from filter list");
+					drawFilterListTable(button);
 				});
 			});
-		};		
-	});
-});
+		});
+	};	
+};
 
 function drawFilterListTable(callback){
 	chrome.storage.sync.get('blockedSites', function (data){
@@ -40,4 +41,5 @@ function drawFilterListTable(callback){
 		}
 		callback();
 	});
+
 };
