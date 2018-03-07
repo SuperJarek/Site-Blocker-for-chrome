@@ -1,7 +1,7 @@
-document.addEventListener('DOMContentLoaded', function() {
-	drawFilterListTable(button);
+document.addEventListener('DOMContentLoaded', function renderFilterListTable() {
+	drawFilterListTable(setButtonsListeners);
 });
-function button(){
+function setButtonsListeners(){
 	let buttons = document.getElementsByTagName("button");
 		console.log("button number: " + buttons.length);
 	for (i = 0; i < buttons.length; i++) {
@@ -14,7 +14,7 @@ function button(){
 				console.log("selected button index: " + id);
 				chrome.storage.sync.set({'blockedSites': blockedSites}, function (){
 					console.log(url + "has been removed from filter list");
-					drawFilterListTable(button);
+					drawFilterListTable(setButtonsListeners);
 				});
 			});
 		});
