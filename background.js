@@ -80,7 +80,7 @@ chrome.contextMenus.onClicked.addListener(function contextMenuHandler(info, tab)
 					chrome.storage.sync.get('blockedSites', function (data){
 						if(tabs.length>1){
 							alert('Something went wrong. Sorry.');
-							throw new Error('passed more than one page to be blocked')
+							throw new Error('More than one active page in current widnow')
 						}
 						let urls = tabs.map(x => x.url);
 						data.blockedSites.push(urls);
