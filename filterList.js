@@ -1,3 +1,5 @@
+var ENTER_KEY_CODE = 13;
+
 document.addEventListener('DOMContentLoaded', function renderFilterListTable() {
 	drawFilterListTable(setCloseButtonsListeners);
 	setAddButtonListener();
@@ -47,7 +49,7 @@ function drawFilterListTable(callback){
 
 function setAddButtonListener(){
 	document.getElementById('urlInput').addEventListener("keypress", function(event){
-		if(event.keyCode == 13){ // 13 is enter
+		if(event.keyCode == ENTER_KEY_CODE){ // 13 is enter
 			addUrlToFilterList();
 		}
 	});
