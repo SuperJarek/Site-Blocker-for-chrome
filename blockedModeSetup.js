@@ -41,14 +41,14 @@ function timer(){
 		if(data.timerData.isTimerEnabled == true){
 			var x = setInterval(function() {
 				var now = new Date().getTime();
-				var distance = data.timerData.blockUntilMilliseconds - now;
-				var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-				var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-				var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-				var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+				var timeLeft = data.timerData.blockUntilMilliseconds - now;
+				var days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+				var hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+				var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+				var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 				document.getElementById("timer").innerHTML = days + "d " + hours + "h "
 					+ minutes + "m " + seconds + "s left";
-				if (distance < 0) {
+				if (timeLeft < 0) {
 					clearInterval(x);
 					document.getElementById("timer").innerHTML = "UNBLOCKED!";
 				}
