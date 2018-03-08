@@ -49,7 +49,7 @@ function timer(){
 				document.getElementById("timer").innerHTML = days + "d " + hours + "h "
 					+ minutes + "m " + seconds + "s left";
 				if (timeLeft < 0) {
-					clearInterval(x);
+					clearInterval(timerInterval);
 					document.getElementById("timer").innerHTML = "UNBLOCKED!";
 				}
 			}, 1000);

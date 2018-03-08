@@ -1,8 +1,5 @@
 chrome.runtime.onInstalled.addListener(function initialization(){
-	var isEnabled = false;
-	chrome.storage.sync.set({'isEnabled': isEnabled}, function() {
-		console.log('Extension is disabled.');
-	});
+	turnFiltereingOff();
 	var blockedSites = ["://www.facebook","://twitter",
 		"://www.youtube","://www.instagram"];
 	chrome.storage.sync.set({'blockedSites': blockedSites}, function() {
@@ -15,18 +12,13 @@ chrome.runtime.onInstalled.addListener(function initialization(){
 
 chrome.browserAction.onClicked.addListener(function toggleBlocking(){
 	chrome.storage.sync.get('isEnabled', function(data){
-		var isEnabled = data.isEnabled;
-		isEnabled = !isEnabled;
-		var icon;
-		if(isEnabled){
-			icon = 'on.png';
-		}else{
-			icon = 'off.png';
+
+		if(data.isEnabled){
+			turnFilteringOff();
 		}
-		chrome.browserAction.setIcon({path: icon});
-		chrome.storage.sync.set({'isEnabled': isEnabled}, function() {
-			console.log('Extension has been disabled/enabled.');
-		});	
+		else{
+			turnFilteringOn();
+		}
 	});
 });
 
@@ -39,10 +31,7 @@ chrome.tabs.onUpdated.addListener(function blockIfEnabled(tabId, info, tab) {
 					if (timeLeft <= 0){  //unblock
 						data.timerData.isTimerEnabled = false;
 						chrome.storage.sync.set({'timerData': data.timerData}, function() {
-							chrome.storage.sync.set({'isEnabled': false}, function() {
-								chrome.browserAction.setIcon({path: 'off.png'});
-								console.log('isEnabled set to false (filter off), time is up.');
-							});
+							turnFilteringOff();
 						});
 						return;
 					}
@@ -57,6 +46,20 @@ chrome.tabs.onUpdated.addListener(function blockIfEnabled(tabId, info, tab) {
 		}
 	});
 });
+
+function turnFilteringOff(){
+	chrome.storage.sync.set({'isEnabled': false}, function() {
+		chrome.browserAction.setIcon({path: 'off.png'});
+		console.log('Filtering disabled');
+	});
+}
+
+function turnFilteringOn(){
+	chrome.storage.sync.set({'isEnabled': true}, function() {
+		chrome.browserAction.setIcon({path: 'on.png'});
+		console.log('Filtering enabled.');
+	});
+}
 
 function filterPage(tabId, tab){
 	chrome.storage.sync.get('blockedSites', function (data) {
