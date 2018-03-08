@@ -36,11 +36,11 @@ chrome.tabs.onUpdated.addListener(function blockIfEnabled(tabId, info, tab) {
 						return;
 					}
 					else{
-						filterPage(tabId, tab);
+						runPageThroughFilter(tabId, tab);
 					}
 				}
 				else{
-					filterPage(tabId, tab);
+					runPageThroughFilter(tabId, tab);
 				}
 			});
 		}
@@ -61,7 +61,7 @@ function turnFilteringOn(){
 	});
 }
 
-function filterPage(tabId, tab){
+function runPageThroughFilter(tabId, tab){
 	chrome.storage.sync.get('blockedSites', function (data) {
 		data.blockedSites.forEach(function (site) {
 			if (tab.url.includes(site)) {
@@ -98,7 +98,7 @@ function denyPage(tabId){
 
 chrome.contextMenus.create({
 	  id: "FilterListMenu",
-      title: "Show Filter List",
+      title: "Show filter list",
       contexts: ["browser_action"]
 });
 
