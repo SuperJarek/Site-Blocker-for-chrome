@@ -1,5 +1,5 @@
 chrome.runtime.onInstalled.addListener(function initialization(){
-	turnFiltereingOff();
+	turnFilteringOff();
 	var blockedSites = ["://www.facebook","://twitter",
 		"://www.youtube","://www.instagram"];
 	chrome.storage.sync.set({'blockedSites': blockedSites}, function() {
@@ -83,6 +83,18 @@ function filterPage(tabId, tab){
 		});
 	});
 }
+function denyPage(tabId){
+	chrome.storage.sync.get('blockingMethod', function (data) {
+		switch (data.blockingMethod) {
+			case "close_tab":
+				chrome.tabs.remove(tabId);
+				break;
+			case "clear_tab":
+				chrome.tabs.discard(tabId);
+				break;
+		}
+	});
+};
 
 chrome.contextMenus.create({
 	  id: "FilterListMenu",
@@ -121,6 +133,10 @@ chrome.contextMenus.onClicked.addListener(function contextMenuHandler(info, tab)
 						data.blockedSites.push(urls);
 						chrome.storage.sync.set({'blockedSites':data.blockedSites}, function(data){
 							console.log(urls + ' added to blocked sites');
+								chrome.storage.sync.get('isEnabled', function(data) {
+									if(data.isEnabled)
+										denyPage(tab.id);
+								});
 						});
 					});	
 				});
