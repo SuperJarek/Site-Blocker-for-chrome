@@ -1,7 +1,7 @@
 var ENTER_KEY_CODE = 13;
 
 document.addEventListener('DOMContentLoaded', function renderFilterListTable() {
-	drawFilterListTable(setCloseButtonsListeners);
+	drawFilterListTable(setDeleteButtonsListeners);
 	setAddButtonListener();
 });
 
@@ -18,7 +18,7 @@ function setDeleteButtonsListeners(){
 				console.log("selected button index: " + id);
 				chrome.storage.sync.set({'blockedSites': blockedSites}, function (){
 					console.log(url + " has been removed from filter list");
-					drawFilterListTable(setCloseButtonsListeners);
+					drawFilterListTable(setDeleteButtonsListeners);
 				});
 			});
 		});
@@ -67,7 +67,8 @@ function addUrlToFilterList(){
 			blockedSites.push(urlInput.value)
 			chrome.storage.sync.set({'blockedSites': blockedSites}, function (){
 				console.log(urlInput + " has been added to filter list");
-				drawFilterListTable(setCloseButtonsListeners);
+				urlInput.value = "";
+				drawFilterListTable(setDeleteButtonsListeners);
 			});
 		});
 	}
