@@ -98,7 +98,7 @@ function denyPage(tabId){
 
 chrome.contextMenus.create({
 	  id: "FilterListMenu",
-      title: "Show Filter List",
+      title: "Show filter list",
       contexts: ["browser_action"]
 });
 
