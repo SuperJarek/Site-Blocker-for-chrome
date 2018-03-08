@@ -41,37 +41,45 @@ chrome.tabs.onUpdated.addListener(function blockIfEnabled(tabId, info, tab) {
 						chrome.storage.sync.set({'timerData': data.timerData}, function() {
 							chrome.storage.sync.set({'isEnabled': false}, function() {
 								chrome.browserAction.setIcon({path: 'off.png'});
-								console.log('Set to false, time is up.');
-								chrome.tabs.reload(tabId);
+								console.log('isEnabled set to false (filter off), time is up.');
 							});
 						});
 						return;
 					}
+					else{
+						filterPage(tabId, tab);
+					}
 				}
-				chrome.storage.sync.get('blockedSites', function (data) {
-					data.blockedSites.forEach(function (site) {
-						if (tab.url.includes(site)) {
-							chrome.storage.sync.get('blockingMethod', function (data) {
-								switch (data.blockingMethod) {
-								case "close_tab":
-									chrome.tabs.remove(tabId);
-									break;
-								case "clear_tab":
-									chrome.tabs.discard(tabId);
-									break;
-								}
-							});
-							/* Alternative way of dealing with tab
-							chrome.tabs.executeScript(tabId, {
-							code: 'document.body.innerHTML = "No facebook for you!"'
-							}); */
-						}
-					});
-				});
+				else{
+					filterPage(tabId, tab);
+				}
 			});
 		}
 	});
 });
+
+function filterPage(tabId, tab){
+	chrome.storage.sync.get('blockedSites', function (data) {
+		data.blockedSites.forEach(function (site) {
+			if (tab.url.includes(site)) {
+				chrome.storage.sync.get('blockingMethod', function (data) {
+					switch (data.blockingMethod) {
+					case "close_tab":
+						chrome.tabs.remove(tabId);
+						break;
+					case "clear_tab":
+						chrome.tabs.discard(tabId);
+						break;
+					}
+				});
+				/* Alternative way of dealing with tab
+				chrome.tabs.executeScript(tabId, {
+				code: 'document.body.innerHTML = "No facebook for you!"'
+				}); */
+			}
+		});
+	});
+}
 
 chrome.contextMenus.create({
 	  id: "FilterListMenu",
@@ -104,7 +112,7 @@ chrome.contextMenus.onClicked.addListener(function contextMenuHandler(info, tab)
 					chrome.storage.sync.get('blockedSites', function (data){
 						if(tabs.length>1){
 							alert('Something went wrong. Sorry.');
-							throw new Error('passed more than one page to be blocked')
+							throw new Error('More than one active page in current window')
 						}
 						let urls = tabs.map(x => x.url);
 						data.blockedSites.push(urls);
