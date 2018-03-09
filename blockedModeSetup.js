@@ -20,19 +20,19 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function setTimer(){
-	let currentDateMilliseconds = Date.now();
-	let durationMilliseconds = 
-		document.getElementById('duration').value * 60 * 1000;
-	let blockUntil = currentDateMilliseconds + durationMilliseconds;
-	let timerData = { isTimerEnabled: true, blockUntilMilliseconds: blockUntil};
-	chrome.storage.sync.set({'timerData': timerData}, function() {
-		console.log('Time set to ' + blockUntil);
-		timer();
-		return;
-	});
-	chrome.storage.sync.set({'isEnabled': true}, function() {
-	chrome.browserAction.setIcon({path: 'on.png'});
-		console.log('Set to enabled');
+	turnFilteringOn(function(confirm){
+		if(confirm){
+			let currentDateMilliseconds = Date.now();
+			let durationMilliseconds = 
+				document.getElementById('duration').value * 60 * 1000;
+			let blockUntil = currentDateMilliseconds + durationMilliseconds;
+			let timerData = { isTimerEnabled: true, blockUntilMilliseconds: blockUntil};
+			chrome.storage.sync.set({'timerData': timerData}, function() {
+				console.log('Time set to ' + blockUntil);
+				timer();
+				return;
+			});
+		}
 	});
 }
 
