@@ -30,10 +30,11 @@ function setTimer(){
 			chrome.storage.sync.set({'timerData': timerData}, function() {
 				console.log('Time set to ' + blockUntil);
 				timer();
-				return;
-			});
+				// return; <- commented on "feature/instant_block_after_enabling"
+ 			});
 		}
 	});
+	console.log(confirm);
 }
 
 function timer(){
@@ -51,6 +52,7 @@ function timer(){
 				if (timeLeft < 0) {
 					clearInterval(timerInterval);
 					document.getElementById("timer").innerHTML = "UNBLOCKED!";
+					turnFilteringOff();
 				}
 			}, 1000);
 		}
