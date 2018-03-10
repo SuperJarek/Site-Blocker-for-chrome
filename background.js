@@ -1,7 +1,6 @@
 chrome.runtime.onInstalled.addListener(function initialization(){
 	turnFilteringOff();
-	var blockedSites = ["://www.facebook","://twitter",
-		"://www.youtube","://www.instagram"];
+	var blockedSites = ["://www.onet.","://www.wp."];
 	chrome.storage.sync.set({'blockedSites': blockedSites}, function() {
 			console.log('Blocked sites are loaded.');
 	});
@@ -12,7 +11,7 @@ chrome.runtime.onInstalled.addListener(function initialization(){
 
 chrome.browserAction.onClicked.addListener(function toggleBlocking(){
 	chrome.storage.sync.get('isEnabled', function(data){
-
+	
 		if(data.isEnabled){
 			turnFilteringOff();
 		}
@@ -36,63 +35,24 @@ chrome.tabs.onUpdated.addListener(function blockIfEnabled(tabId, info, tab) {
 						return;
 					}
 					else{
-						runPageThroughFilter(tabId, tab);
+						runPageThroughFilter(tab);
 					}
 				}
 				else{
-					runPageThroughFilter(tabId, tab);
+					runPageThroughFilter(tab);
 				}
 			});
 		}
 	});
 });
 
-function turnFilteringOff(){
-	chrome.storage.sync.set({'isEnabled': false}, function() {
-		chrome.browserAction.setIcon({path: 'off.png'});
-		console.log('Filtering disabled');
-	});
-}
-
-function turnFilteringOn(){
-	chrome.storage.sync.set({'isEnabled': true}, function() {
-		chrome.browserAction.setIcon({path: 'on.png'});
-		console.log('Filtering enabled.');
-	});
-}
-
-function runPageThroughFilter(tabId, tab){
+function runPageThroughFilter(tab){
 	chrome.storage.sync.get('blockedSites', function (data) {
 		data.blockedSites.forEach(function (site) {
 			if (tab.url.includes(site)) {
-				chrome.storage.sync.get('blockingMethod', function (data) {
-					switch (data.blockingMethod) {
-					case "close_tab":
-						chrome.tabs.remove(tabId);
-						break;
-					case "clear_tab":
-						chrome.tabs.discard(tabId);
-						break;
-					}
-				});
-				/* Alternative way of dealing with tab
-				chrome.tabs.executeScript(tabId, {
-				code: 'document.body.innerHTML = "No facebook for you!"'
-				}); */
+				denyPage(tab.id);
 			}
 		});
-	});
-}
-function denyPage(tabId){
-	chrome.storage.sync.get('blockingMethod', function (data) {
-		switch (data.blockingMethod) {
-			case "close_tab":
-				chrome.tabs.remove(tabId);
-				break;
-			case "clear_tab":
-				chrome.tabs.discard(tabId);
-				break;
-		}
 	});
 };
 
@@ -103,8 +63,22 @@ chrome.contextMenus.create({
 });
 
 chrome.contextMenus.create({
+	  id: "AddToFilterList",
+      title: "Block this:",
+      contexts: ["browser_action"]
+});
+
+chrome.contextMenus.create({
+	  parentId: "AddToFilterList",
 	  id: "AddSiteToFilterList",
-      title: "Block this page",
+      title: "page",
+      contexts: ["browser_action"]
+});
+
+chrome.contextMenus.create({
+	  parentId: "AddToFilterList",
+	  id: "AddDomainToFilterList",
+      title: "domain",
       contexts: ["browser_action"]
 });
 
@@ -124,28 +98,30 @@ chrome.contextMenus.onClicked.addListener(function contextMenuHandler(info, tab)
 				break;
 			case "AddSiteToFilterList":
 				chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-					chrome.storage.sync.get('blockedSites', function (data){
-						if(tabs.length>1){
-							alert('Something went wrong. Sorry.');
-							throw new Error('More than one active page in current window')
-						}
-						let urls = tabs.map(x => x.url);
-						data.blockedSites.push(urls);
-						chrome.storage.sync.set({'blockedSites':data.blockedSites}, function(data){
-							console.log(urls + ' added to blocked sites');
-								chrome.storage.sync.get('isEnabled', function(data) {
-									if(data.isEnabled)
-										denyPage(tab.id);
-								});
-						});
-					});	
+					let urls = tabs.map(x => x.url);
+					blockUrl(urls[0], tab);
+				});
+				break;
+			case "AddDomainToFilterList":
+				chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+					let urls = tabs.map(x => x.url);
+					var domain = urls[0].match(/^[\w]+:\/{2}([\w\.:-]+)/)[1];
+					blockUrl(domain, tab);
 				});
 				break;
 		}
 });
 
-
-
-
-
-
+function blockUrl(url, tab){
+	chrome.storage.sync.get('blockedSites', function (data){
+		data.blockedSites.push(url); // urls.hostname
+		chrome.storage.sync.set({'blockedSites':data.blockedSites}, function(data){
+			console.log(url + ' added to blocked sites');
+			chrome.storage.sync.get('isEnabled', function(data) {
+				if(data.isEnabled){
+					denyPage(tab.id);
+				}
+			});
+		});
+	});	
+}
