@@ -7,7 +7,7 @@
   "options_page": "options.html",
   
   "background": {
-    "scripts": ["background.js"],
+    "scripts": ["background.js", "toggling.js"],
 	"persistent": false
   },
   "browser_action": {
