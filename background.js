@@ -1,12 +1,24 @@
 chrome.runtime.onInstalled.addListener(function initialization(){
 	turnFilteringOff();
-	var blockedSites = ["://www.onet.","://www.wp."];
-	chrome.storage.sync.set({'blockedSites': blockedSites}, function() {
+
+	chrome.storage.sync.set({'blockingMethod': "close_tab"});
+	let timerData = { isTimerEnabled: false, blockUntilMilliseconds: 0};
+	chrome.storage.sync.set({'timerData': timerData});
+	
+	var newWindow = window.open("", "newWindow", "resizable=yes");
+	newWindow.document.write('<span title="costam">Pop up window text</span>');
+	var defaultListConfirm = confirm('Do you want to load default filter list?');
+	if (defaultListConfirm == true) {
+		console.log("User confirmed loading a default filter list");
+		var blockedSites = ["://www.onet.pl","://www.wp.pl"];
+		chrome.storage.sync.set({'blockedSites': blockedSites}, function() {
 			console.log('Blocked sites are loaded.');
 	});
-	chrome.storage.sync.set({'blockingMethod': "close_tab"}, function() {});
-	let timerData = { isTimerEnabled: false, blockUntilMilliseconds: 0};
-	chrome.storage.sync.set({'timerData': timerData}, function() {});
+	} 
+	else {
+		console.log("User cancelled loading a default filter list.");
+	}
+
 });
 
 chrome.browserAction.onClicked.addListener(function toggleBlocking(){
