@@ -71,14 +71,14 @@ chrome.contextMenus.create({
 chrome.contextMenus.create({
 	  parentId: "AddToFilterList",
 	  id: "AddSiteToFilterList",
-      title: "page",
+      title: "Page",
       contexts: ["browser_action"]
 });
 
 chrome.contextMenus.create({
 	  parentId: "AddToFilterList",
 	  id: "AddDomainToFilterList",
-      title: "domain",
+      title: "Domain",
       contexts: ["browser_action"]
 });
 
@@ -112,7 +112,7 @@ chrome.contextMenus.onClicked.addListener(function contextMenuHandler(info, tab)
 		}
 });
 
-function blockUrl(url, tab){
+function addUrlToBlockedSites(url, tab){
 	chrome.storage.sync.get('blockedSites', function (data){
 		data.blockedSites.push(url); // urls.hostname
 		chrome.storage.sync.set({'blockedSites':data.blockedSites}, function(data){
