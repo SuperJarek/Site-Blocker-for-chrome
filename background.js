@@ -99,14 +99,14 @@ chrome.contextMenus.onClicked.addListener(function contextMenuHandler(info, tab)
 			case "AddSiteToFilterList":
 				chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 					let urls = tabs.map(x => x.url);
-					blockUrl(urls[0], tab);
+					addUrlToBlockedSites(urls[0], tab);
 				});
 				break;
 			case "AddDomainToFilterList":
 				chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 					let urls = tabs.map(x => x.url);
 					var domain = urls[0].match(/^[\w]+:\/{2}([\w\.:-]+)/)[1];
-					blockUrl(domain, tab);
+					addUrlToBlockedSites(domain, tab);
 				});
 				break;
 		}
