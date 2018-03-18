@@ -13,27 +13,27 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
     let startButton = document.getElementById('start');
     startButton.addEventListener('click', function() {
-		setTimer();
+		turnFilteringOn(function(confirm){
+			if(confirm){
+				setTimer();
+			}
+		});
     });
 	
 	timer();
 });
 
 function setTimer(){
-	let currentDateMilliseconds = Date.now();
-	let durationMilliseconds = 
-		document.getElementById('duration').value * 60 * 1000;
-	let blockUntil = currentDateMilliseconds + durationMilliseconds;
-	let timerData = { isTimerEnabled: true, blockUntilMilliseconds: blockUntil};
-	chrome.storage.sync.set({'timerData': timerData}, function() {
-		console.log('Time set to ' + blockUntil);
-		timer();
-		return;
-	});
-	chrome.storage.sync.set({'isEnabled': true}, function() {
-	chrome.browserAction.setIcon({path: 'on.png'});
-		console.log('Set to enabled');
-	});
+		let currentDateMilliseconds = Date.now();
+		let durationMilliseconds = 
+			document.getElementById('duration').value * 60 * 1000;
+		let blockUntil = currentDateMilliseconds + durationMilliseconds;
+		let timerData = { isTimerEnabled: true, blockUntilMilliseconds: blockUntil};
+		chrome.storage.sync.set({'timerData': timerData}, function() {
+			console.log('Time set to ' + blockUntil);
+			timer();
+			// return; <- commented on "feature/instant_block_after_enabling"
+ 		});
 }
 
 function timer(){
@@ -51,6 +51,7 @@ function timer(){
 				if (timeLeft < 0) {
 					clearInterval(timerInterval);
 					document.getElementById("timer").innerHTML = "UNBLOCKED!";
+					//turnFilteringOff();
 				}
 			}, 1000);
 		}
