@@ -20,8 +20,6 @@ function turnFilteringOn(callback){
 				});
 			});
 			if(tabsToDeny.length > 0){
-				console.log("elo");
-				
 				var communicate = "There are " + tabsToDeny.length + " sites";
 				if(tabsToDeny.length == 1){
 					communicate = "There is 1 site";
