@@ -10,7 +10,7 @@ chrome.runtime.onInstalled.addListener(function initialization(){
 		if(typeof blockedSites != "undefined" && blockedSites != null 
 			&& blockedSites.length != null && blockedSites.length > 0){
 			var defaultListConfirm = confirm("We have detected that our extension" 
-				+ " was installed once on this device.\nDo you want to load your old filter list?");
+				+ " was once installed on this device.\nDo you want to load your old filter list?");
 			if (defaultListConfirm == true) {
 				console.log("User confirmed keeping a previous filter list");
 			} 
