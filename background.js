@@ -9,7 +9,7 @@ chrome.runtime.onInstalled.addListener(function initialization(){
 		blockedSites = data.blockedSites;
 		if(typeof blockedSites != "undefined" && blockedSites != null 
 			&& blockedSites.length != null && blockedSites.length > 0){
-			var defaultListConfirm = confirm("We detected that our extension" 
+			var defaultListConfirm = confirm("We have detected that our extension" 
 				+ " was installed once on this device.\nDo you want to load your old filter list?");
 			if (defaultListConfirm == true) {
 				console.log("User confirmed keeping a previous filter list");
@@ -31,7 +31,7 @@ chrome.runtime.onInstalled.addListener(function initialization(){
 function addDefaultFilters(){
 	var blockedSites = ["://www.onet.pl","://www.wp.pl"];
 	chrome.storage.sync.set({'blockedSites': blockedSites}, function() {
-		console.log('Default blocked sites has been loaded.');
+		console.log('Default blocked sites have been loaded.');
 	});
 };
 
