@@ -20,8 +20,14 @@ function turnFilteringOn(callback){
 				});
 			});
 			if(tabsToDeny.length > 0){
-				var switchOnConfirm = confirm("There are: " + tabsToDeny.length 
-					+ " sites to be closed" + "\n Are you sure you want to switch the blocking on?", "Site Blocker");
+				console.log("elo");
+				
+				var communicate = "There are " + tabsToDeny.length + " sites";
+				if(tabsToDeny.length == 1){
+					communicate = "There is 1 site";
+				}
+				 communicate += " open which will be closed.\nAre you sure you want to switch the blocking on?";
+				var switchOnConfirm = confirm(communicate);
 				if (switchOnConfirm == true) {
 					console.log("User confirmed switching on");
 					chrome.storage.sync.set({'isEnabled': true}, function() {
