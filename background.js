@@ -1,13 +1,39 @@
 chrome.runtime.onInstalled.addListener(function initialization(){
 	turnFilteringOff();
-	var blockedSites = ["://www.onet.","://www.wp."];
-	chrome.storage.sync.set({'blockedSites': blockedSites}, function() {
-			console.log('Blocked sites are loaded.');
-	});
-	chrome.storage.sync.set({'blockingMethod': "close_tab"}, function() {});
+
+	chrome.storage.sync.set({'blockingMethod': "close_tab"});
 	let timerData = { isTimerEnabled: false, blockUntilMilliseconds: 0};
-	chrome.storage.sync.set({'timerData': timerData}, function() {});
+	chrome.storage.sync.set({'timerData': timerData});
+	
+	chrome.storage.sync.get('blockedSites', function(data) {
+		blockedSites = data.blockedSites;
+		if(typeof blockedSites != "undefined" && blockedSites != null 
+			&& blockedSites.length != null && blockedSites.length > 0){
+			var defaultListConfirm = confirm("We have detected that our extension" 
+				+ " was once installed on this device.\nDo you want to load your old filter list?");
+			if (defaultListConfirm == true) {
+				console.log("User confirmed keeping a previous filter list");
+			} 
+			else {
+				console.log("User cancelled loading a previous filter list.");
+				addDefaultFilters();
+			}
+		} 
+		else {
+			console.log("User didn't have any previous filters");
+			addDefaultFilters();
+		}
+
+	});
+
 });
+
+function addDefaultFilters(){
+	var blockedSites = ["://www.onet.pl","://www.wp.pl"];
+	chrome.storage.sync.set({'blockedSites': blockedSites}, function() {
+		console.log('Default blocked sites have been loaded.');
+	});
+};
 
 chrome.browserAction.onClicked.addListener(function toggleBlocking(){
 	chrome.storage.sync.get('isEnabled', function(data){
