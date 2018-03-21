@@ -1,3 +1,16 @@
+chrome.storage.sync.get('isEnabled', function (data) {
+	if(data.isEnabled){
+		icon = 'on.png';
+	}
+	else if(!data.isEnabled){
+		icon = 'off.png';
+	}else{
+		icon = 'icon.png';
+	}
+	chrome.browserAction.setIcon({path:{"16": icon}});
+});
+
+
 chrome.runtime.onInstalled.addListener(function initialization(){
 	turnFilteringOff();
 
@@ -23,10 +36,11 @@ chrome.runtime.onInstalled.addListener(function initialization(){
 			console.log("User didn't have any previous filters");
 			addDefaultFilters();
 		}
-
 	});
-
 });
+
+
+
 
 function addDefaultFilters(){
 	var blockedSites = ["://www.onet.pl","://www.wp.pl"];
