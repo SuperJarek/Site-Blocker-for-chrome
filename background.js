@@ -36,13 +36,23 @@ function addDefaultFilters(){
 };
 
 chrome.browserAction.onClicked.addListener(function toggleBlocking(){
-	chrome.storage.sync.get('isEnabled', function(data){
-	
-		if(data.isEnabled){
-			turnFilteringOff();
+	chrome.storage.sync.get('timerData', function (data) {
+		if(data.timerData.isTimerEnabled == false){
+			chrome.storage.sync.get('isEnabled', function(data){
+				if(data.isEnabled){
+					turnFilteringOff();
+				}
+				else{
+					turnFilteringOn();
+				}
+			});
 		}
 		else{
-			turnFilteringOn();
+			var now = new Date().getTime();
+			var timeLeft = data.timerData.blockUntilMilliseconds - now;
+			var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+			var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+			alert("Timer mode enabled! " + minutes + " minutes " + seconds + " seconds left.");
 		}
 	});
 });
