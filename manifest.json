@@ -10,8 +10,9 @@
     "scripts": ["background.js", "toggling.js"],
 	"persistent": false
   },
+  "icons": { "16": "icon.png"},
   "browser_action": {
-	"default_icon": "off.png"
+	"default_icon": "icon.png"
   },
   "permissions": [
     "storage",
