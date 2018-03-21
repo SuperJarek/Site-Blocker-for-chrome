@@ -13,9 +13,20 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
     let startButton = document.getElementById('start');
     startButton.addEventListener('click', function() {
-		turnFilteringOn(function(confirm){
-			if(confirm){
-				setTimer();
+		chrome.storage.sync.get('timerData', function (data) {
+			if(data.timerData.isTimerEnabled == false){
+				turnFilteringOn(function(confirm){
+					if(confirm){
+						setTimer();
+					}
+				});
+			}
+			else{
+				var now = new Date().getTime();
+				var timeLeft = data.timerData.blockUntilMilliseconds - now;
+				var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+				var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+				alert("Timer mode enabled! You can't reset it untill time is up. " + minutes + " minutes " + seconds + " seconds left.");
 			}
 		});
     });
