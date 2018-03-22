@@ -23,9 +23,7 @@ chrome.runtime.onInstalled.addListener(function initialization(){
 			console.log("User didn't have any previous filters");
 			addDefaultFilters();
 		}
-
 	});
-
 });
 
 function addDefaultFilters(){
@@ -34,6 +32,20 @@ function addDefaultFilters(){
 		console.log('Default blocked sites have been loaded.');
 	});
 };
+
+chrome.runtime.onStartup.addListener(function() {
+	chrome.storage.sync.get('isEnabled', function (data) {
+		if(data.isEnabled){
+			icon = 'on.png';
+		}
+		else if(!data.isEnabled){
+			icon = 'off.png';
+		}else{
+			icon = 'icon.png';
+		}
+		chrome.browserAction.setIcon({path:{"16": icon}});
+	});
+});
 
 chrome.browserAction.onClicked.addListener(function toggleBlocking(){
 	chrome.storage.sync.get('isEnabled', function(data){
