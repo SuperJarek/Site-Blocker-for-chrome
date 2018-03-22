@@ -48,12 +48,13 @@ chrome.browserAction.onClicked.addListener(function toggleBlocking(){
 			});
 		}
 		else{
-			if(updateTimer(data.timerData) == false){
+			if(!updateTimer(data.timerData)){
 				var now = new Date().getTime();
 				var timeLeft = data.timerData.blockUntilMilliseconds - now;
+				var hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 				var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
 				var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-				alert("Timer mode enabled! " + minutes + " minutes " + seconds + " seconds left.");
+				alert("Timer mode enabled! " + hours + " hours "+ minutes + " minutes " + seconds + " seconds left.");
 			}
 		}
 	});
@@ -77,9 +78,7 @@ function updateTimer(timerData){
 		});
 		return true;
 	}
-	else{
-		return false;
-	}
+	return false;
 }
 
 chrome.tabs.onUpdated.addListener(function blockIfEnabled(tabId, info, tab) {
@@ -87,7 +86,7 @@ chrome.tabs.onUpdated.addListener(function blockIfEnabled(tabId, info, tab) {
 		if (data.isEnabled) {
 			chrome.storage.sync.get('timerData', function (data) {
 				if(data.timerData.isTimerEnabled){
-					if(updateTimer(data.timerData) == false){
+					if(!updateTimer(data.timerData)){
 						runPageThroughFilter(tab);
 					}
 				}
