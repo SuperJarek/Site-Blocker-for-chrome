@@ -95,52 +95,74 @@ function runPageThroughFilter(tab){
 };
 
 chrome.contextMenus.create({
-	  id: "FilterListMenu",
+	  id: "baFilterListMenu",
       title: "Show filter list",
       contexts: ["browser_action"]
 });
 
 chrome.contextMenus.create({
-	  id: "AddToFilterList",
+	  id: "baAddToFilterList",
       title: "Block this:",
       contexts: ["browser_action"]
 });
 
 chrome.contextMenus.create({
-	  parentId: "AddToFilterList",
-	  id: "AddSiteToFilterList",
+	  parentId: "baAddToFilterList",
+	  id: "baAddSiteToFilterList",
       title: "Page",
       contexts: ["browser_action"]
 });
 
 chrome.contextMenus.create({
-	  parentId: "AddToFilterList",
-	  id: "AddDomainToFilterList",
+	  parentId: "baAddToFilterList",
+	  id: "baAddDomainToFilterList",
       title: "Domain",
       contexts: ["browser_action"]
 });
 
 chrome.contextMenus.create({
-	  id: "BlockedModeTimer",
+	  id: "baBlockedModeTimer",
       title: "Blocked mode setup",
       contexts: ["browser_action"]
 });
 
+chrome.contextMenus.create({
+	  id: "pgAddToFilterList",
+      title: "Block this:",
+      contexts: ["page"]
+});
+
+chrome.contextMenus.create({
+	  parentId: "pgAddToFilterList",
+	  id: "pgAddSiteToFilterList",
+      title: "Page",
+      contexts: ["page"]
+});
+
+chrome.contextMenus.create({
+	  parentId: "pgAddToFilterList",
+	  id: "pgAddDomainToFilterList",
+      title: "Domain",
+      contexts: ["page"]
+});
+
 chrome.contextMenus.onClicked.addListener(function contextMenuHandler(info, tab) {
 		switch(info.menuItemId) {
-			case "FilterListMenu":
+			case "baFilterListMenu":
 				chrome.tabs.create({ url: '/filterList.html'});
 				break;
-			case "BlockedModeTimer":
+			case "baBlockedModeTimer":
 				chrome.tabs.create({ url: '/blockedModeSetup.html'});
 				break;
-			case "AddSiteToFilterList":
+			case "baAddSiteToFilterList":
+			case "pgAddSiteToFilterList":
 				chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 					let urls = tabs.map(x => x.url);
 					addUrlToBlockedSites(urls[0], tab);
 				});
 				break;
-			case "AddDomainToFilterList":
+			case "baAddDomainToFilterList":
+			case "pgAddDomainToFilterList":
 				chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 					let urls = tabs.map(x => x.url);
 					var domain = urls[0].match(/^[\w]+:\/{2}([\w\.:-]+)/)[1];
