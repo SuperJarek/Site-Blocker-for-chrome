@@ -1,6 +1,6 @@
 function turnFilteringOff(){
 	chrome.storage.sync.set({'isEnabled': false}, function() {
-		chrome.browserAction.setIcon({path: 'off.png'});
+		chrome.browserAction.setIcon({path:{"16": 'off.png'}});
 		console.log('Filtering disabled');
 	});
 }
@@ -29,7 +29,7 @@ function turnFilteringOn(callback){
 				if (switchOnConfirm == true) {
 					console.log("User confirmed switching on");
 					chrome.storage.sync.set({'isEnabled': true}, function() {
-						chrome.browserAction.setIcon({path: 'on.png'});
+						chrome.browserAction.setIcon({path:{"16": 'on.png'}});
 						console.log('Filtering enabled.');
 						tabsToDeny.forEach(function(tab){
 							denyPage(tab.id);
