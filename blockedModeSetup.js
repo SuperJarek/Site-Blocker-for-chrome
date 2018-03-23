@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	let textField = document.getElementById('duration');
     let startButton = document.getElementById('start');
 	chrome.storage.sync.get('timerData', function (data) {
-		if(data.timerData.isTimerEnabled == true){
+		if(data.timerData.isTimerEnabled){
 			startButton.disabled = true;
 			textField.disabled = true;
 		}

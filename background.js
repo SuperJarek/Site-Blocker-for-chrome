@@ -11,7 +11,7 @@ chrome.runtime.onInstalled.addListener(function initialization(){
 			&& blockedSites.length != null && blockedSites.length > 0){
 			var defaultListConfirm = confirm("We have detected that our extension" 
 				+ " was once installed on this device.\nDo you want to load your old filter list?");
-			if (defaultListConfirm == true) {
+			if (defaultListConfirm) {
 				console.log("User confirmed keeping a previous filter list");
 			} 
 			else {
@@ -23,9 +23,7 @@ chrome.runtime.onInstalled.addListener(function initialization(){
 			console.log("User didn't have any previous filters");
 			addDefaultFilters();
 		}
-
 	});
-
 });
 
 function addDefaultFilters(){
@@ -37,7 +35,7 @@ function addDefaultFilters(){
 
 chrome.browserAction.onClicked.addListener(function toggleBlocking(){
 	chrome.storage.sync.get('timerData', function (data) {
-		if(data.timerData.isTimerEnabled == false){
+		if(!data.timerData.isTimerEnabled){
 			chrome.storage.sync.get('isEnabled', function(data){
 				if(data.isEnabled){
 					turnFilteringOff();
