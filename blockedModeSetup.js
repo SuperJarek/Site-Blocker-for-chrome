@@ -1,6 +1,9 @@
 const ENTER_KEY_CODE = 13;
 
 document.addEventListener('DOMContentLoaded', function() {
+	var imporedJsFile = document.createElement('script');
+	imporedJsFile.src = 'toggling.js';
+	document.head.appendChild(imporedJsFile);
 	let textField = document.getElementById('duration');
 	textField.focus();
 	textField.select();
@@ -51,7 +54,7 @@ function timer(){
 				if (timeLeft < 0) {
 					clearInterval(timerInterval);
 					document.getElementById("timer").innerHTML = "UNBLOCKED!";
-					//turnFilteringOff();
+					turnFilteringOff();
 				}
 			}, 1000);
 		}
