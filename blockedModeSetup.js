@@ -27,6 +27,7 @@ function enableTimerMode(){
 			turnFilteringOn(function(confirm){
 				if(confirm){
 					document.getElementById('start').disabled = true;
+					document.getElementById('duration').disabled = true;
 					setTimer();
 				}
 			});
