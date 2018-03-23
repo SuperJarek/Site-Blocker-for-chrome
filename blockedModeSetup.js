@@ -14,32 +14,33 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.getElementById('duration').addEventListener('keyup', function(event) {
 		event.preventDefault();
 		if (event.keyCode == ENTER_KEY_CODE) {
-			setTimer();
+			enableTimerMode();
 		}
 	});
-    startButton.addEventListener('click', function() {
-		alert("fff");
-		chrome.storage.sync.get('timerData', function (data) {
-			if(data.timerData.isTimerEnabled == false){
-				turnFilteringOn(function(confirm){
-					if(confirm){
-						startButton.disabled = true;
-						setTimer();
-					}
-				});
-			}
-			else{
-				var now = new Date().getTime();
-				var timeLeft = data.timerData.blockUntilMilliseconds - now;
-				var hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-				var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-				var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-				alert("Timer mode enabled! You can't reset it untill time is up. " + hours + " hours " + minutes + " minutes " + seconds + " seconds left.");
-			}
-		});
-    });
+    startButton.addEventListener('click', enableTimerMode);
 	timer();
 });
+
+function enableTimerMode(){
+	chrome.storage.sync.get('timerData', function (data) {
+		if(data.timerData.isTimerEnabled == false){
+			turnFilteringOn(function(confirm){
+				if(confirm){
+					document.getElementById('start').disabled = true;
+					setTimer();
+				}
+			});
+		}
+		else{
+			var now = new Date().getTime();
+			var timeLeft = data.timerData.blockUntilMilliseconds - now;
+			var hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+			var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+			var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+			alert("Timer mode enabled! You can't reset it untill time is up. " + hours + " hours " + minutes + " minutes " + seconds + " seconds left.");
+		}
+	});
+}
 
 function setTimer(){
 		let currentDateMilliseconds = Date.now();
