@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			enableTimerMode();
 		}
 	});
-  startButton.addEventListener('click', enableTimerMode);
+    startButton.addEventListener('click', enableTimerMode);
 	timer();
 });
 
@@ -74,6 +74,7 @@ function timer(){
 				if (timeLeft < 0) {
 					clearInterval(timerInterval);
 					document.getElementById("timer").innerHTML = "UNBLOCKED!";
+					document.getElementById("timer").style.color = "#37dd00";
 					document.getElementById('start').disabled = false;
 					document.getElementById('duration').disabled = false;
 					data.timerData.isTimerEnabled = false;

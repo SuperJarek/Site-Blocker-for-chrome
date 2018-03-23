@@ -73,7 +73,7 @@ chrome.browserAction.onClicked.addListener(function toggleBlocking(){
 });
 
 /**
- * This function, given timerData, checks if the time of Blocked Mode is up. 
+ * This function, given timerData, checks if the time of Timer mode is up. 
  * If it is, it switched the Mode and filtering off. Else it returns false.
  *
  * @param {Object} 'timerData' from chrome.storage.sync.get.
@@ -147,8 +147,8 @@ chrome.contextMenus.create({
 });
 
 chrome.contextMenus.create({
-	  id: "baBlockedModeTimer",
-      title: "Blocked mode setup",
+	  id: "baTimerMode",
+      title: "Timer mode setup",
       contexts: ["browser_action"]
 });
 
@@ -177,7 +177,7 @@ chrome.contextMenus.onClicked.addListener(function contextMenuHandler(info, tab)
 			case "baFilterListMenu":
 				chrome.tabs.create({ url: '/filterList.html'});
 				break;
-			case "baBlockedModeTimer":
+			case "baTimerMode":
 				chrome.tabs.create({ url: '/blockedModeSetup.html'});
 				break;
 			case "baAddSiteToFilterList":

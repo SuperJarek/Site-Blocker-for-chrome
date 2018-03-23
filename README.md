@@ -12,7 +12,7 @@ An open source, site blocking/filtering extension for Google Chrome. Version 0.1
 - By left clicking on the icon, you can toggle the blocking functionality.
 - By picking "Block this page" from the context menu, you can add current page to the filter. 
 - In the options tab, it is possible to choose the extensions behaviour when it encounters blocked site (closing the tab or clearing it).
-- You can set up a timer, that will switch the blocking on for certain ammount of time. You can find it in "Blocked mode setup" tab of the menu.
+- You can set up a timer, that will switch the blocking on for certain ammount of time. You can find it in "Timer mode setup" tab of the menu.
 
 ## Feedback
 For all the feedback feel free to email baniecki.jan(at)gmail.com or jaroslaw.szymukowicz(at)gmail.com
