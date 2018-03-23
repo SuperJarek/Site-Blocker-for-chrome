@@ -32,6 +32,7 @@ function enableTimerMode(){
 					document.getElementById('start').disabled = true;
 					document.getElementById('duration').disabled = true;
 					setTimer();
+					document.getElementById("timer").style.color = "red";
 				}
 			});
 		}

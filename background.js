@@ -178,7 +178,7 @@ chrome.contextMenus.onClicked.addListener(function contextMenuHandler(info, tab)
 				chrome.tabs.create({ url: '/filterList.html'});
 				break;
 			case "baTimerMode":
-				chrome.tabs.create({ url: '/blockedModeSetup.html'});
+				chrome.tabs.create({ url: '/timerModeSetup.html'});
 				break;
 			case "baAddSiteToFilterList":
 			case "pgAddSiteToFilterList":
