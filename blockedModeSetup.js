@@ -6,10 +6,13 @@ document.addEventListener('DOMContentLoaded', function() {
 	chrome.storage.sync.get('timerData', function (data) {
 		if(data.timerData.isTimerEnabled == true){
 			startButton.disabled = true;
+			textField.disabled = true;
+		}
+		else{
+			textField.focus();
+			textField.select();
 		}
 	});
-	textField.focus();
-	textField.select();
 	
 	document.getElementById('duration').addEventListener('keyup', function(event) {
 		event.preventDefault();
@@ -23,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function enableTimerMode(){
 	chrome.storage.sync.get('timerData', function (data) {
-		if(data.timerData.isTimerEnabled == false){
+		if(!data.timerData.isTimerEnabled){
 			turnFilteringOn(function(confirm){
 				if(confirm){
 					document.getElementById('start').disabled = true;
@@ -38,7 +41,8 @@ function enableTimerMode(){
 			var hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 			var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
 			var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-			alert("Timer mode enabled! You can't reset it untill time is up. " + hours + " hours " + minutes + " minutes " + seconds + " seconds left.");
+			alert("Timer mode enabled! You can't reset it untill time is up. " + hours + " hours " 
+					+ minutes + " minutes " + seconds + " seconds left.");
 		}
 	});
 }
@@ -58,14 +62,15 @@ function setTimer(){
 
 function timer(){
 	chrome.storage.sync.get('timerData', function (data) {
-		if(data.timerData.isTimerEnabled == true){
+		if(data.timerData.isTimerEnabled){
 			var timerInterval = setInterval(function() {
 				var now = new Date().getTime();
 				var timeLeft = data.timerData.blockUntilMilliseconds - now;
 				var hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 				var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
 				var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-				document.getElementById("timer").innerHTML =  hours + "h " + minutes + "m " + seconds + "s left";
+				document.getElementById("timer").innerHTML =  hours + "h " + minutes + "m " 
+																							+ seconds + "s left";
 				if (timeLeft < 0) {
 					clearInterval(timerInterval);
 					document.getElementById("timer").innerHTML = "UNBLOCKED!";
