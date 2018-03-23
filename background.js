@@ -11,7 +11,7 @@ chrome.runtime.onInstalled.addListener(function initialization(){
 			&& blockedSites.length != null && blockedSites.length > 0){
 			var defaultListConfirm = confirm("We have detected that our extension" 
 				+ " was once installed on this device.\nDo you want to load your old filter list?");
-			if (defaultListConfirm == true) {
+			if (defaultListConfirm) {
 				console.log("User confirmed keeping a previous filter list");
 			} 
 			else {
@@ -48,31 +48,57 @@ chrome.runtime.onStartup.addListener(function() {
 });
 
 chrome.browserAction.onClicked.addListener(function toggleBlocking(){
-	chrome.storage.sync.get('isEnabled', function(data){
-	
-		if(data.isEnabled){
-			turnFilteringOff();
+	chrome.storage.sync.get('timerData', function (data) {
+		if(!data.timerData.isTimerEnabled){
+			chrome.storage.sync.get('isEnabled', function(data){
+				if(data.isEnabled){
+					turnFilteringOff();
+				}
+				else{
+					turnFilteringOn();
+				}
+			});
 		}
 		else{
-			turnFilteringOn();
+			if(!updateTimer(data.timerData)){
+				var now = new Date().getTime();
+				var timeLeft = data.timerData.blockUntilMilliseconds - now;
+				var hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+				var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+				var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+				alert("Timer mode enabled! " + hours + " hours "+ minutes + " minutes " + seconds + " seconds left.");
+			}
 		}
 	});
 });
+
+/**
+ * This function, given timerData, checks if the time of Blocked Mode is up. 
+ * If it is, it switched the Mode and filtering off. Else it returns false.
+ *
+ * @param {Object} 'timerData' from chrome.storage.sync.get.
+ *
+ * @return {boolean} true if the time is up and filtering was turned off
+ *				   				    false it time is not up yet
+ */
+function updateTimer(timerData){
+	let timeLeft = timerData.blockUntilMilliseconds - Date.now();
+	if (timeLeft <= 0){  //unblock
+		timerData.isTimerEnabled = false;
+		chrome.storage.sync.set({'timerData': timerData}, function() {
+			turnFilteringOff();
+		});
+		return true;
+	}
+	return false;
+}
 
 chrome.tabs.onUpdated.addListener(function blockIfEnabled(tabId, info, tab) {
 	chrome.storage.sync.get('isEnabled', function (data) {
 		if (data.isEnabled) {
 			chrome.storage.sync.get('timerData', function (data) {
 				if(data.timerData.isTimerEnabled){
-					let timeLeft = data.timerData.blockUntilMilliseconds - Date.now();
-					if (timeLeft <= 0){  //unblock
-						data.timerData.isTimerEnabled = false;
-						chrome.storage.sync.set({'timerData': data.timerData}, function() {
-							turnFilteringOff();
-						});
-						return;
-					}
-					else{
+					if(!updateTimer(data.timerData)){
 						runPageThroughFilter(tab);
 					}
 				}

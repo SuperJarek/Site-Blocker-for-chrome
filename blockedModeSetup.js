@@ -2,25 +2,50 @@ const ENTER_KEY_CODE = 13;
 
 document.addEventListener('DOMContentLoaded', function() {
 	let textField = document.getElementById('duration');
-	textField.focus();
-	textField.select();
+    let startButton = document.getElementById('start');
+	chrome.storage.sync.get('timerData', function (data) {
+		if(data.timerData.isTimerEnabled){
+			startButton.disabled = true;
+			textField.disabled = true;
+		}
+		else{
+			textField.focus();
+			textField.select();
+		}
+	});
 	
 	document.getElementById('duration').addEventListener('keyup', function(event) {
 		event.preventDefault();
 		if (event.keyCode == ENTER_KEY_CODE) {
-			setTimer();
+			enableTimerMode();
 		}
 	});
-    let startButton = document.getElementById('start');
-    startButton.addEventListener('click', function() {
-		turnFilteringOn(function(confirm){
-			if(confirm){
-				setTimer();
-			}
-		});
-    });
+  startButton.addEventListener('click', enableTimerMode);
 	timer();
 });
+
+function enableTimerMode(){
+	chrome.storage.sync.get('timerData', function (data) {
+		if(!data.timerData.isTimerEnabled){
+			turnFilteringOn(function(confirm){
+				if(confirm){
+					document.getElementById('start').disabled = true;
+					document.getElementById('duration').disabled = true;
+					setTimer();
+				}
+			});
+		}
+		else{
+			var now = new Date().getTime();
+			var timeLeft = data.timerData.blockUntilMilliseconds - now;
+			var hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+			var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+			var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+			alert("Timer mode enabled! You can't reset it untill time is up. " + hours + " hours " 
+					+ minutes + " minutes " + seconds + " seconds left.");
+		}
+	});
+}
 
 function setTimer(){
 	let currentDateMilliseconds = Date.now();
@@ -41,15 +66,16 @@ function timer(){
 			let timerInterval = setInterval(function() {
 				let now = new Date().getTime();
 				let timeLeft = data.timerData.blockUntilMilliseconds - now;
-				let days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
 				let hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 				let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
 				let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-				document.getElementById("timer").innerHTML = days + "d " + hours + "h "
-					+ minutes + "m " + seconds + "s left";
+				document.getElementById("timer").innerHTML =  hours + "h " + minutes + "m " 
+																							+ seconds + "s left";
 				if (timeLeft < 0) {
 					clearInterval(timerInterval);
 					document.getElementById("timer").innerHTML = "UNBLOCKED!";
+					document.getElementById('start').disabled = false;
+					document.getElementById('duration').disabled = false;
 					data.timerData.isTimerEnabled = false;
 					chrome.storage.sync.set({'timerData': data.timerData}, function() {
 						turnFilteringOff();
