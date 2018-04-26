@@ -27,7 +27,7 @@ chrome.runtime.onInstalled.addListener(function initialization(){
 });
 
 function addDefaultFilters(){
-	var blockedSites = ["://www.onet.pl","://www.wp.pl"];
+	var blockedSites = ["://www.facebook.com","://www.twitter.com","://www.instagram.com","://www.youtube.com"];
 	chrome.storage.sync.set({'blockedSites': blockedSites}, function() {
 		console.log('Default blocked sites have been loaded.');
 	});
