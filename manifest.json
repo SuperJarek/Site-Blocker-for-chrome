@@ -3,7 +3,7 @@
 
   "name": "SiteBlocker",
   "description": "This extension allows the user to block choosen sites from beeing loaded.",
-  "version": "0.1",
+  "version": "0.3",
   "options_page": "options.html",
   
   "background": {
