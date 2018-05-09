@@ -3,15 +3,16 @@
 
   "name": "SiteBlocker",
   "description": "This extension allows the user to block choosen sites from beeing loaded.",
-  "version": "0.1",
+  "version": "0.3",
   "options_page": "options.html",
   
   "background": {
-    "scripts": ["background.js"],
+    "scripts": ["background.js", "toggling.js"],
 	"persistent": false
   },
+  "icons": { "16": "icon.png"},
   "browser_action": {
-	"default_icon": "off.png"
+	"default_icon": "icon.png"
   },
   "permissions": [
     "storage",
